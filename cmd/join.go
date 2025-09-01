@@ -4,6 +4,7 @@ Copyright © 2025 NAME HERE <EMAIL ADDRESS>
 package cmd
 
 import (
+	"hivessh/logic"
 	"os"
 
 	"github.com/spf13/cobra"
@@ -18,7 +19,7 @@ var joinCmd = &cobra.Command{
 		var name = os.Args[2]
 		var ip = os.Args[3]
 
-		join(name, ip)
+		logic.Join(name, ip)
 	},
 }
 
