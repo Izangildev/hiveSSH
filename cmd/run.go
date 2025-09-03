@@ -19,18 +19,23 @@ var runCmd = &cobra.Command{
 		var command = args[0]
 
 		if command == "" {
-			fmt.Println("Error: command cannot be empty")
+			fmt.Println("[✖] Command cannot be empty. Please provide a valid command to run.")
 			return
 		}
 
 		if target == "" {
-			fmt.Println("Error: you must specify a target with --to")
+			fmt.Println("[✖] You must specify a target server using --to")
 			return
 		}
 
+		fmt.Printf("[→] Connecting to server '%s'...\n", target)
+
 		if err := logic.Run(command, target); err != nil {
-			fmt.Println("Error:", err)
+			fmt.Printf("[✖] Command execution failed: %s\n", err)
+			return
 		}
+
+		fmt.Printf("[✔] Command executed successfully on '%s'\n", target)
 	},
 }
 

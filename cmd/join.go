@@ -20,20 +20,24 @@ var joinCmd = &cobra.Command{
 		var name = args[0]
 
 		if name == "" {
-			fmt.Println("Error: name cannot be empty")
+			fmt.Println("[✖] Server name cannot be empty. Please provide a valid name.")
 			return
 		}
 
 		var ip = args[1]
 
 		if net.ParseIP(ip) == nil || ip == "" {
-			fmt.Println("Error: invalid IP address format")
+			fmt.Println("[✖] Invalid IP address. Please provide a valid IPv4 or IPv6 address.")
 			return
 		}
 
 		if err := logic.Join(name, ip); err != nil {
-			fmt.Println("Error:", err)
+			fmt.Printf("[✖] Failed to add server: %s\n", err)
+			return
 		}
+
+		fmt.Printf("[✔] Server '%s' successfully added with IP '%s'\n", name, ip)
+
 	},
 }
 

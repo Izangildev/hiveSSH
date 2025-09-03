@@ -9,11 +9,11 @@ func Join(serverName, ip string) error {
 	existsIP, _ := serverExists(ip)
 
 	if existsName || existsIP {
-		return fmt.Errorf("Server %s or IP %s already stored", serverName, ip)
+		return fmt.Errorf("server %s or IP %s already stored", serverName, ip)
 	}
 
 	servers[serverName] = ip
-	fmt.Println("Server", serverName, "saved with IP -->", ip)
+	fmt.Println("Server", serverName, "saved with IP-->", ip)
 	SaveServers()
 	return nil
 }

@@ -11,9 +11,9 @@ func Run(command, identifier string) error {
 
 	exists, kind := serverExists(identifier)
 	if !exists {
-		fmt.Println("This server is not in DB")
+		fmt.Printf("[✖] Server '%s' not found in database\n", identifier)
 	} else {
-		fmt.Println("Found server by", kind)
+		fmt.Printf("[✔] Server '%s' found by %s\n", identifier, kind)
 	}
 
 	var ip string
@@ -24,7 +24,7 @@ func Run(command, identifier string) error {
 	case "IP":
 		ip = identifier
 	default:
-		return fmt.Errorf("Invalid identifier type")
+		return fmt.Errorf("invalid identifier type")
 	}
 
 	fmt.Println("Executing command:", command)
@@ -32,22 +32,23 @@ func Run(command, identifier string) error {
 	// Start new ssh connection with private key.
 	auth, err := goph.Key(env.Private_key, "")
 	if err != nil {
-		return fmt.Errorf("Failed to load private key: %w", err)
+		return fmt.Errorf("failed to load private key: %w", err)
 	}
 
 	client, err := goph.New("root", ip, auth)
 	if err != nil {
-		return fmt.Errorf("Failed to connect to %s: %w", ip, err)
+		return fmt.Errorf("failed to connect to %s: %w", ip, err)
 	}
 
 	// Defer closing the network connection.
 	defer client.Close()
 
 	// Execute your command.
+	fmt.Printf("[→] Executing command: %s\n", command)
 	out, err := client.Run(command)
 
 	if err != nil {
-		return fmt.Errorf("Failed to execute command: %w", err)
+		return fmt.Errorf("failed to execute command: %w", err)
 	}
 
 	// Get your output as []byte.
