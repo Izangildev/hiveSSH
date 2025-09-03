@@ -8,13 +8,24 @@ import (
 	"github.com/melbahja/goph"
 )
 
-func Run(command, server string) {
+func Run(command, identifier string) {
 
-	exists, kind := serverExists(server)
+	exists, kind := serverExists(identifier)
 	if !exists {
 		fmt.Println("This server is not in DB")
 	} else {
 		fmt.Println("Found server by", kind)
+	}
+
+	var ip string
+
+	switch kind {
+	case "name":
+		ip = servers[identifier]
+	case "IP":
+		ip = identifier
+	default:
+		log.Fatal("Invalid identifier type")
 	}
 
 	fmt.Println("Executing command:", command)
@@ -25,7 +36,7 @@ func Run(command, server string) {
 		log.Fatal(err)
 	}
 
-	client, err := goph.New("root", server, auth)
+	client, err := goph.New("root", ip, auth)
 	if err != nil {
 		log.Fatal(err)
 	}
