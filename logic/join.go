@@ -13,7 +13,6 @@ func Join(serverName, ip string) error {
 	}
 
 	servers[serverName] = ip
-	fmt.Println("Server", serverName, "saved with IP-->", ip)
 	SaveServers()
 	return nil
 }

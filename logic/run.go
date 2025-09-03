@@ -1,6 +1,7 @@
 package logic
 
 import (
+	"bytes"
 	"fmt"
 	"hivessh/env"
 
@@ -11,12 +12,13 @@ func Run(command, identifier string) error {
 
 	exists, kind := serverExists(identifier)
 	if !exists {
-		fmt.Printf("[✖] Server '%s' not found in database\n", identifier)
+		fmt.Printf("[❌] Server '%s' not found in database\n", identifier)
 	} else {
-		fmt.Printf("[✔] Server '%s' found by %s\n", identifier, kind)
+		fmt.Printf("[✅] Server '%s' found by %s\n", identifier, kind)
 	}
 
 	var ip string
+	var stdout, stderr bytes.Buffer
 
 	switch kind {
 	case "name":
@@ -26,8 +28,6 @@ func Run(command, identifier string) error {
 	default:
 		return fmt.Errorf("invalid identifier type")
 	}
-
-	fmt.Println("Executing command:", command)
 
 	// Start new ssh connection with private key.
 	auth, err := goph.Key(env.Private_key, "")
@@ -40,18 +40,25 @@ func Run(command, identifier string) error {
 		return fmt.Errorf("failed to connect to %s: %w", ip, err)
 	}
 
-	// Defer closing the network connection.
-	defer client.Close()
-
-	// Execute your command.
-	fmt.Printf("[→] Executing command: %s\n", command)
-	out, err := client.Run(command)
-
+	session, err := client.NewSession()
 	if err != nil {
-		return fmt.Errorf("failed to execute command: %w", err)
+		return fmt.Errorf("failed to create SSH session: %w", err)
 	}
 
-	// Get your output as []byte.
-	fmt.Println(string(out))
+	defer session.Close()
+
+	session.Stdout = &stdout
+	session.Stderr = &stderr
+
+	if err := session.Run(command); err != nil {
+		return fmt.Errorf("command failed: %s\n[stderr]: %s", err, stderr.String())
+	}
+
+	if stdout.Len() > 0 {
+		fmt.Printf("[✅] Output:\n%s\n", stdout.String())
+	} else {
+		fmt.Println("[✅] Command executed successfully with no output.")
+	}
+
 	return nil
 }

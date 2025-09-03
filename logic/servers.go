@@ -27,7 +27,7 @@ func existServersFile(serversFile string) bool {
 		if os.IsNotExist(err) {
 			return false
 		}
-		fmt.Printf("[✖] Failed to find servers file: %s\n", err)
+		fmt.Printf("[❌] Failed to find servers file: %s\n", err)
 
 		return false
 	}
@@ -38,13 +38,13 @@ func existServersFile(serversFile string) bool {
 func SaveServers() {
 	data, err := json.MarshalIndent(servers, "", "  ")
 	if err != nil {
-		fmt.Printf("[✖] Failed to convert in JSON: %s\n", err)
+		fmt.Printf("[❌] Failed to convert in JSON: %s\n", err)
 		return
 	}
 
 	err = os.WriteFile(env.ServersFile, data, 0644)
 	if err != nil {
-		fmt.Printf("[✖] Failed to write servers file: %s\n", err)
+		fmt.Printf("[❌] Failed to write servers file: %s\n", err)
 		return
 	}
 }
@@ -56,7 +56,7 @@ func LoadServers(serversFile string) {
 
 	data, err := os.ReadFile(serversFile)
 	if err != nil {
-		fmt.Printf("[✖] Failed to read servers file: %s\n", err)
+		fmt.Printf("[❌] Failed to read servers file: %s\n", err)
 		return
 	}
 
@@ -66,7 +66,7 @@ func LoadServers(serversFile string) {
 
 	err = json.Unmarshal(data, &servers)
 	if err != nil {
-		fmt.Printf("[✖] Failed to parse servers JSON: %s\n", err)
+		fmt.Printf("[❌] Failed to parse servers JSON: %s\n", err)
 		return
 	}
 }
