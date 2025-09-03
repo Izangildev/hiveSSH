@@ -3,12 +3,11 @@ package logic
 import (
 	"fmt"
 	"hivessh/env"
-	"log"
 
 	"github.com/melbahja/goph"
 )
 
-func Run(command, identifier string) {
+func Run(command, identifier string) error {
 
 	exists, kind := serverExists(identifier)
 	if !exists {
@@ -25,7 +24,7 @@ func Run(command, identifier string) {
 	case "IP":
 		ip = identifier
 	default:
-		log.Fatal("Invalid identifier type")
+		return fmt.Errorf("Invalid identifier type")
 	}
 
 	fmt.Println("Executing command:", command)
@@ -33,12 +32,12 @@ func Run(command, identifier string) {
 	// Start new ssh connection with private key.
 	auth, err := goph.Key(env.Private_key, "")
 	if err != nil {
-		log.Fatal(err)
+		return fmt.Errorf("Failed to load private key: %w", err)
 	}
 
 	client, err := goph.New("root", ip, auth)
 	if err != nil {
-		log.Fatal(err)
+		return fmt.Errorf("Failed to connect to %s: %w", ip, err)
 	}
 
 	// Defer closing the network connection.
@@ -48,9 +47,10 @@ func Run(command, identifier string) {
 	out, err := client.Run(command)
 
 	if err != nil {
-		log.Fatal(err)
+		return fmt.Errorf("Failed to execute command: %w", err)
 	}
 
 	// Get your output as []byte.
 	fmt.Println(string(out))
+	return nil
 }

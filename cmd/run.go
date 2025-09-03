@@ -18,12 +18,19 @@ var runCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		var command = args[0]
 
-		if target == "" {
-			fmt.Println("You need to specify a target (Name or IP).")
+		if command == "" {
+			fmt.Println("Error: command cannot be empty")
 			return
 		}
 
-		logic.Run(command, target)
+		if target == "" {
+			fmt.Println("Error: you must specify a target with --to")
+			return
+		}
+
+		if err := logic.Run(command, target); err != nil {
+			fmt.Println("Error:", err)
+		}
 	},
 }
 

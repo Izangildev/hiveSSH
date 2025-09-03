@@ -4,7 +4,9 @@ Copyright © 2025 NAME HERE <EMAIL ADDRESS>
 package cmd
 
 import (
+	"fmt"
 	"hivessh/logic"
+	"net"
 
 	"github.com/spf13/cobra"
 )
@@ -13,25 +15,28 @@ import (
 var joinCmd = &cobra.Command{
 	Use:   "join",
 	Short: "Join command. Used to join servers into the database.",
-	Long:  ``,
+	Args:  cobra.ExactArgs(2),
 	Run: func(cmd *cobra.Command, args []string) {
 		var name = args[0]
+
+		if name == "" {
+			fmt.Println("Error: name cannot be empty")
+			return
+		}
+
 		var ip = args[1]
 
-		logic.Join(name, ip)
+		if net.ParseIP(ip) == nil || ip == "" {
+			fmt.Println("Error: invalid IP address format")
+			return
+		}
+
+		if err := logic.Join(name, ip); err != nil {
+			fmt.Println("Error:", err)
+		}
 	},
 }
 
 func init() {
 	rootCmd.AddCommand(joinCmd)
-
-	// Here you will define your flags and configuration settings.
-
-	// Cobra supports Persistent Flags which will work for this command
-	// and all subcommands, e.g.:
-	// joinCmd.PersistentFlags().String("foo", "", "A help for foo")
-
-	// Cobra supports local flags which will only run when this command
-	// is called directly, e.g.:
-	// joinCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }

@@ -4,16 +4,16 @@ import (
 	"fmt"
 )
 
-func Join(serverName, ip string) {
+func Join(serverName, ip string) error {
 	existsName, _ := serverExists(serverName)
 	existsIP, _ := serverExists(ip)
 
 	if existsName || existsIP {
-		fmt.Println("This server is already stored.")
-		return
+		return fmt.Errorf("Server %s or IP %s already stored", serverName, ip)
 	}
 
 	servers[serverName] = ip
 	fmt.Println("Server", serverName, "saved with IP -->", ip)
 	SaveServers()
+	return nil
 }
