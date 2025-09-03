@@ -8,7 +8,15 @@ import (
 	"github.com/melbahja/goph"
 )
 
-func Run(command string) {
+func Run(command, server string) {
+
+	exists, kind := serverExists(server)
+	if !exists {
+		fmt.Println("This server is not in DB")
+	} else {
+		fmt.Println("Found server by", kind)
+	}
+
 	fmt.Println("Executing command:", command)
 
 	// Start new ssh connection with private key.
@@ -17,7 +25,7 @@ func Run(command string) {
 		log.Fatal(err)
 	}
 
-	client, err := goph.New("root", "192.168.1.115", auth)
+	client, err := goph.New("root", server, auth)
 	if err != nil {
 		log.Fatal(err)
 	}

@@ -9,6 +9,18 @@ import (
 
 var servers = make(map[string]string)
 
+func serverExists(identifier string) (bool, string) {
+	for name, ip := range servers {
+		switch {
+		case identifier == name:
+			return true, "name"
+		case identifier == ip:
+			return true, "IP"
+		}
+	}
+	return false, ""
+}
+
 func existServersFile(serversFile string) bool {
 	_, err := os.Stat(serversFile)
 	if err != nil {

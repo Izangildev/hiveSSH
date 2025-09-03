@@ -5,7 +5,6 @@ package cmd
 
 import (
 	"hivessh/logic"
-	"os"
 
 	"github.com/spf13/cobra"
 )
@@ -16,8 +15,8 @@ var joinCmd = &cobra.Command{
 	Short: "Join command. Used to join servers into the database.",
 	Long:  ``,
 	Run: func(cmd *cobra.Command, args []string) {
-		var name = os.Args[2]
-		var ip = os.Args[3]
+		var name = args[0]
+		var ip = args[1]
 
 		logic.Join(name, ip)
 	},

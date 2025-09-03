@@ -4,18 +4,12 @@ import (
 	"fmt"
 )
 
-func serverExists(serverName, ipAddress string) bool {
-	for name, ip := range servers {
-		if serverName == name || ipAddress == ip {
-			return true
-		}
-	}
-	return false
-}
-
 func Join(serverName, ip string) {
-	if serverExists(serverName, ip) {
-		fmt.Println("This server is already loaded.")
+	existsName, _ := serverExists(serverName)
+	existsIP, _ := serverExists(ip)
+
+	if existsName || existsIP {
+		fmt.Println("This server is already stored.")
 		return
 	}
 
