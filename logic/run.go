@@ -47,6 +47,7 @@ func Run(command, identifier string) error {
 
 	defer session.Close()
 
+	// session.Stdout stores the address to write output
 	session.Stdout = &stdout
 	session.Stderr = &stderr
 

@@ -8,8 +8,8 @@ import (
 
 var rootCmd = &cobra.Command{
 	Use:   "hivessh",
-	Short: "",
-	Long:  ``,
+	Short: "HiveSSH - multiple SSH controller",
+	Long:  `HiveSSH is a small tool to store SSH targets and execute remote commands.`,
 }
 
 func Execute() {

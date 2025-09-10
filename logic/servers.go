@@ -5,10 +5,24 @@ import (
 	"fmt"
 	"hivessh/env"
 	"os"
+
+	"net"
+	"time"
 )
 
 var servers = make(map[string]string)
 
+func getStatus(ip string) bool {
+	conn, err := net.DialTimeout("tcp", ip+":22", 5*time.Second)
+	if err != nil {
+		return false
+	}
+	defer conn.Close()
+	return true
+}
+
+// This function returns if the server exists based on an identifier
+// If exists returns the identifier kind
 func serverExists(identifier string) (bool, string) {
 	for name, ip := range servers {
 		switch {
@@ -34,7 +48,7 @@ func existServersFile(serversFile string) bool {
 	return true
 }
 
-// Guarda servers en el JSON
+// Save servers to JSON
 func SaveServers() {
 	data, err := json.MarshalIndent(servers, "", "  ")
 	if err != nil {
