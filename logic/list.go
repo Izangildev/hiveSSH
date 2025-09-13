@@ -17,7 +17,7 @@ type extractableServer struct {
 
 func List(outputType string) error {
 	// Header
-	fmt.Printf("%-10s %-18s %-14s\n", "NAME", "IP", "SSH STATUS")
+	fmt.Printf("%-10s %-18s %-14s\n", "   NAME  ", "        IP      ", "  SSH STATUS ")
 	fmt.Println("────────── ────────────────── ──────────────")
 
 	var serversToExtract []extractableServer
