@@ -1,10 +1,13 @@
 package cmd
 
 import (
+	"fmt"
 	"hivessh/logic"
 
 	"github.com/spf13/cobra"
 )
+
+var outputType string
 
 var listCmd = &cobra.Command{
 	Use:   "list",
@@ -13,11 +16,19 @@ var listCmd = &cobra.Command{
 along with their IP address and connection status (reachable or unreachable).`,
 	Run: func(cmd *cobra.Command, args []string) {
 
-		logic.List()
+		if outputType != "" && outputType != "json" && outputType != "csv" {
+			fmt.Println("[❌] Invalid output type. Supported types are: json, csv")
+			return
+		}
+
+		if err := logic.List(outputType); err != nil {
+			fmt.Printf("[❌] Command execution failed: %s\n", err)
+			return
+		}
 	},
 }
 
 func init() {
-	runCmd.Flags().StringVar(&target, "to", "", "IP or name of the server stored in DB")
+	listCmd.Flags().StringVar(&outputType, "output", "", "Specify output format: json or csv")
 	rootCmd.AddCommand(listCmd)
 }
