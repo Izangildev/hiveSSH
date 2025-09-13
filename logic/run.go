@@ -19,15 +19,24 @@ func Run(command, identifier string) error {
 
 	var ip string
 	var stdout, stderr bytes.Buffer
-
-	port := servers[identifier].Port
-	user := servers[identifier].User
+	var port int
+	var user string
 
 	switch kind {
 	case "name":
 		ip = servers[identifier].IP
+		port = servers[identifier].Port
+		user = servers[identifier].User
 	case "IP":
 		ip = identifier
+		for _, server := range servers {
+			if server.IP == identifier {
+				port = server.Port
+				user = server.User
+				break
+			}
+		}
+
 	default:
 		return fmt.Errorf("invalid identifier type")
 	}
@@ -38,9 +47,11 @@ func Run(command, identifier string) error {
 		return fmt.Errorf("failed to load private key: %w", err)
 	}
 
-	client, err := goph.New(user, fmt.Sprintf("%s:%d", ip, port), auth)
+	// client, err := goph.New(user, fmt.Sprintf("%s:%d", ip, port), auth)
+	client, err := goph.New(user, ip, auth)
 	if err != nil {
 		return fmt.Errorf("failed to connect to %s:%d: %w", ip, port, err)
+		// return fmt.Errorf("failed to connect to %s: %w", ip, err)
 	}
 
 	session, err := client.NewSession()

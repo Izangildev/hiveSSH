@@ -5,5 +5,12 @@
     "Port": 22,
     "Group": [],
     "Description": ""
+  },
+  "mateo": {
+    "IP": "254.6.2.1",
+    "User": "root",
+    "Port": 22,
+    "Group": [],
+    "Description": ""
   }
 }
