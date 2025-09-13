@@ -20,9 +20,12 @@ func Run(command, identifier string) error {
 	var ip string
 	var stdout, stderr bytes.Buffer
 
+	port := servers[identifier].Port
+	user := servers[identifier].User
+
 	switch kind {
 	case "name":
-		ip = servers[identifier]
+		ip = servers[identifier].IP
 	case "IP":
 		ip = identifier
 	default:
@@ -35,9 +38,9 @@ func Run(command, identifier string) error {
 		return fmt.Errorf("failed to load private key: %w", err)
 	}
 
-	client, err := goph.New("root", ip, auth)
+	client, err := goph.New(user, fmt.Sprintf("%s:%d", ip, port), auth)
 	if err != nil {
-		return fmt.Errorf("failed to connect to %s: %w", ip, err)
+		return fmt.Errorf("failed to connect to %s:%d: %w", ip, port, err)
 	}
 
 	session, err := client.NewSession()

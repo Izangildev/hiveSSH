@@ -16,6 +16,7 @@ var runCmd = &cobra.Command{
 	Long:  ``,
 	Args:  cobra.ExactArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
+
 		var command = args[0]
 
 		if command == "" {

@@ -4,14 +4,22 @@ import (
 	"encoding/json"
 	"fmt"
 	"hivessh/env"
-	"os"
-
 	"net"
+	"os"
 	"time"
 )
 
-var servers = make(map[string]string)
+type ServerInfo struct {
+	IP          string
+	User        string
+	Port        int
+	Group       []string
+	Description string
+}
 
+var servers = make(map[string]ServerInfo)
+
+// This function checks if the server is reachable via SSH (port 22)
 func getStatus(ip string) bool {
 	conn, err := net.DialTimeout("tcp", ip+":22", 5*time.Second)
 	if err != nil {
@@ -24,11 +32,11 @@ func getStatus(ip string) bool {
 // This function returns if the server exists based on an identifier
 // If exists returns the identifier kind
 func serverExists(identifier string) (bool, string) {
-	for name, ip := range servers {
+	for name, server := range servers {
 		switch {
 		case identifier == name:
 			return true, "name"
-		case identifier == ip:
+		case identifier == server.IP:
 			return true, "IP"
 		}
 	}

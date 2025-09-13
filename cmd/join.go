@@ -11,12 +11,17 @@ import (
 	"github.com/spf13/cobra"
 )
 
+var user string
+var port int
+var description string
+
 // joinCmd represents the join command
 var joinCmd = &cobra.Command{
 	Use:   "join",
 	Short: "Join command. Used to join servers into the database.",
 	Args:  cobra.ExactArgs(2),
 	Run: func(cmd *cobra.Command, args []string) {
+
 		var name = args[0]
 
 		if name == "" {
@@ -31,7 +36,7 @@ var joinCmd = &cobra.Command{
 			return
 		}
 
-		if err := logic.Join(name, ip); err != nil {
+		if err := logic.Join(name, ip, user, description, port); err != nil {
 			fmt.Printf("[❌] Failed to add server: %s\n", err)
 			return
 		}
@@ -42,5 +47,8 @@ var joinCmd = &cobra.Command{
 }
 
 func init() {
+	joinCmd.Flags().StringVarP(&user, "user", "u", "root", "SSH user for the server (default: root)")
+	joinCmd.Flags().IntVarP(&port, "port", "p", 22, "SSH port for the server (default: 22)")
+	joinCmd.Flags().StringVarP(&description, "description", "d", "", "Description for the server")
 	rootCmd.AddCommand(joinCmd)
 }
