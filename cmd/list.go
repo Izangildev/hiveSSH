@@ -18,5 +18,6 @@ along with their IP address and connection status (reachable or unreachable).`,
 }
 
 func init() {
+	runCmd.Flags().StringVar(&target, "to", "", "IP or name of the server stored in DB")
 	rootCmd.AddCommand(listCmd)
 }

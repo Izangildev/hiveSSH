@@ -4,6 +4,12 @@ import (
 	"fmt"
 )
 
+type extractableServer struct {
+	name   string
+	ip     string
+	status bool
+}
+
 func List() {
 	// Header
 	fmt.Printf("%-10s %-18s %-14s\n", "NAME", "IP", "SSH STATUS")
