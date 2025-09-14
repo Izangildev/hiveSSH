@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"fmt"
 	"hivessh/env"
-	"io/ioutil"
+	"os"
 
 	"golang.org/x/crypto/ssh"
 )
@@ -40,7 +40,7 @@ func Run(command, identifier string) error {
 		return fmt.Errorf("invalid identifier type")
 	}
 
-	key, err := ioutil.ReadFile(env.Private_key)
+	key, err := os.ReadFile(env.Private_key)
 	if err != nil {
 		return fmt.Errorf("unable to read private key: %w", err)
 	}
@@ -55,8 +55,8 @@ func Run(command, identifier string) error {
 		Auth: []ssh.AuthMethod{
 			ssh.PublicKeys(signer),
 		},
-		HostKeyCallback: ssh.InsecureIgnoreHostKey(), // ¡En producción usa un callback seguro!
-		Timeout:         20 * 1e9,                    // 60 segundos
+		HostKeyCallback: ssh.InsecureIgnoreHostKey(), // In production, use a proper host key callback
+		Timeout:         20 * 1e9,
 	}
 
 	addr := fmt.Sprintf("%s:%d", ip, port)
