@@ -4,21 +4,21 @@ import (
 	"bytes"
 	"fmt"
 	"hivessh/env"
+	"io/ioutil"
 
-	"github.com/melbahja/goph"
+	"golang.org/x/crypto/ssh"
 )
 
 func Run(command, identifier string) error {
-
 	exists, kind := serverExists(identifier)
 	if !exists {
 		fmt.Printf("[❌] Server '%s' not found in database\n", identifier)
+		return fmt.Errorf("server not found")
 	} else {
 		fmt.Printf("[✅] Server '%s' found by %s\n", identifier, kind)
 	}
 
 	var ip string
-	var stdout, stderr bytes.Buffer
 	var port int
 	var user string
 
@@ -36,32 +36,43 @@ func Run(command, identifier string) error {
 				break
 			}
 		}
-
 	default:
 		return fmt.Errorf("invalid identifier type")
 	}
 
-	// Start new ssh connection with private key.
-	auth, err := goph.Key(env.Private_key, "")
+	key, err := ioutil.ReadFile(env.Private_key)
 	if err != nil {
-		return fmt.Errorf("failed to load private key: %w", err)
+		return fmt.Errorf("unable to read private key: %w", err)
 	}
 
-	// client, err := goph.New(user, fmt.Sprintf("%s:%d", ip, port), auth)
-	client, err := goph.New(user, ip, auth)
+	signer, err := ssh.ParsePrivateKey(key)
 	if err != nil {
-		return fmt.Errorf("failed to connect to %s:%d: %w", ip, port, err)
-		// return fmt.Errorf("failed to connect to %s: %w", ip, err)
+		return fmt.Errorf("unable to parse private key: %w", err)
 	}
+
+	config := &ssh.ClientConfig{
+		User: user,
+		Auth: []ssh.AuthMethod{
+			ssh.PublicKeys(signer),
+		},
+		HostKeyCallback: ssh.InsecureIgnoreHostKey(), // ¡En producción usa un callback seguro!
+		Timeout:         20 * 1e9,                    // 60 segundos
+	}
+
+	addr := fmt.Sprintf("%s:%d", ip, port)
+	client, err := ssh.Dial("tcp", addr, config)
+	if err != nil {
+		return fmt.Errorf("failed to connect to %s: %w", addr, err)
+	}
+	defer client.Close()
 
 	session, err := client.NewSession()
 	if err != nil {
 		return fmt.Errorf("failed to create SSH session: %w", err)
 	}
-
 	defer session.Close()
 
-	// session.Stdout stores the address to write output
+	var stdout, stderr bytes.Buffer
 	session.Stdout = &stdout
 	session.Stderr = &stderr
 
