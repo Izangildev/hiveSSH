@@ -22,6 +22,11 @@ var joinCmd = &cobra.Command{
 	Args:  cobra.ExactArgs(2),
 	Run: func(cmd *cobra.Command, args []string) {
 
+		if len(args) < 2 {
+			fmt.Println("[❌] You must provide both a server name and an IP address.")
+			return
+		}
+
 		var name = args[0]
 
 		if name == "" {
@@ -50,5 +55,5 @@ func init() {
 	joinCmd.Flags().StringVarP(&user, "user", "u", "root", "SSH user for the server (default: root)")
 	joinCmd.Flags().IntVarP(&port, "port", "p", 22, "SSH port for the server (default: 22)")
 	joinCmd.Flags().StringVarP(&description, "description", "d", "", "Description for the server")
-	rootCmd.AddCommand(joinCmd)
+	RootCmd.AddCommand(joinCmd)
 }

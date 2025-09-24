@@ -30,5 +30,5 @@ along with their IP address and connection status (reachable or unreachable).`,
 
 func init() {
 	listCmd.Flags().StringVar(&outputType, "output", "", "Specify output format: json or csv")
-	rootCmd.AddCommand(listCmd)
+	RootCmd.AddCommand(listCmd)
 }

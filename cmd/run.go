@@ -17,6 +17,11 @@ var runCmd = &cobra.Command{
 	Args:  cobra.ExactArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
 
+		if len(args) < 1 {
+			fmt.Println("[❌] You must provide a command to run.")
+			return
+		}
+
 		var command = args[0]
 
 		if command == "" {
@@ -42,5 +47,5 @@ var runCmd = &cobra.Command{
 
 func init() {
 	runCmd.Flags().StringVar(&target, "to", "", "IP or name of the server stored in DB")
-	rootCmd.AddCommand(runCmd)
+	RootCmd.AddCommand(runCmd)
 }
