@@ -62,3 +62,8 @@ func LoadGroups(groupsFile string) {
 		return
 	}
 }
+
+func GroupExists(groupname string) bool {
+	_, exists := groups[groupname]
+	return exists
+}

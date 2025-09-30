@@ -11,19 +11,21 @@ import (
 // Class to posteriorly extract server information in json or csv format
 type extractableServer struct {
 	Name   string
+	Id     string
 	IP     string
 	Status string
 }
 
 func List(outputType string) error {
 	// Header
-	fmt.Printf("%-10s %-18s %-14s\n", "   NAME  ", "        IP      ", "  SSH STATUS ")
-	fmt.Println("────────── ────────────────── ──────────────")
+	fmt.Printf("%-10s %-18s %-14s %-35s\n", "   NAME  ", "        IP      ", "  SSH STATUS ", "              ID              ")
+	fmt.Println("────────── ────────────────── ────────────── ─────────────────────────────────")
 
 	var serversToExtract []extractableServer
 
-	for name := range servers {
-		ip := servers[name].IP
+	for name := range Servers {
+		ip := Servers[name].IP
+		id := Servers[name].Id
 		ping := getStatus(ip)
 		var status string
 
@@ -34,10 +36,10 @@ func List(outputType string) error {
 			status = "unreachable"
 		}
 
-		serversToExtract = append(serversToExtract, extractableServer{Name: name, IP: ip, Status: status})
+		serversToExtract = append(serversToExtract, extractableServer{Name: name, IP: ip, Status: status, Id: id})
 
-		fmt.Printf("%-10s %-18s %-14s\n", name, ip, status)
-		fmt.Println("────────── ────────────────── ──────────────")
+		fmt.Printf("%-10s %-18s %-14s %-35s\n", name, ip, status, id)
+		fmt.Println("────────── ────────────────── ────────────── ─────────────────────────────────")
 	}
 
 	switch outputType {

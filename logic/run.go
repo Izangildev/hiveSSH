@@ -10,7 +10,7 @@ import (
 )
 
 func Run(command, identifier string) error {
-	exists, kind := serverExists(identifier)
+	exists, kind := ServerExists(identifier)
 	if !exists {
 		fmt.Printf("[❌] Server '%s' not found in database\n", identifier)
 		return fmt.Errorf("server not found")
@@ -24,12 +24,12 @@ func Run(command, identifier string) error {
 
 	switch kind {
 	case "name":
-		ip = servers[identifier].IP
-		port = servers[identifier].Port
-		user = servers[identifier].User
+		ip = Servers[identifier].IP
+		port = Servers[identifier].Port
+		user = Servers[identifier].User
 	case "IP":
 		ip = identifier
-		for _, server := range servers {
+		for _, server := range Servers {
 			if server.IP == identifier {
 				port = server.Port
 				user = server.User

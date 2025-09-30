@@ -5,22 +5,25 @@ import (
 )
 
 func Join(serverName, ip, user, description string, port int) error {
-	existsName, _ := serverExists(serverName)
-	existsIP, _ := serverExists(ip)
+	existsName, _ := ServerExists(serverName)
+	existsIP, _ := ServerExists(ip)
 
 	if existsName || existsIP {
 		return fmt.Errorf("server %s or IP %s already stored", serverName, ip)
 	}
 
+	var id string = createID()
+
 	serverToStore := ServerInfo{
+		Id:          serverName + id,
 		IP:          ip,
 		User:        user,
 		Port:        port,
-		Group:       []string{},
+		Groups:      []string{},
 		Description: description,
 	}
 
-	servers[serverName] = serverToStore
+	Servers[serverName] = serverToStore
 	SaveServers()
 	return nil
 }

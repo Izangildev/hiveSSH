@@ -1,16 +1,12 @@
 {
   "bee1": {
+    "Id": "bee1201b6be17b056b507e338e453f3cea83",
     "IP": "192.168.1.115",
     "User": "root",
     "Port": 22,
-    "Group": [],
-    "Description": ""
-  },
-  "mateo": {
-    "IP": "254.6.2.1",
-    "User": "root",
-    "Port": 22,
-    "Group": [],
+    "Groups": [
+      "604dc2f508a0165d8bfe9a7d34aeaf2b"
+    ],
     "Description": ""
   }
 }

@@ -1,6 +1,7 @@
 package logic
 
 import (
+	"crypto/md5"
 	"encoding/json"
 	"fmt"
 	"hivessh/env"
@@ -10,14 +11,22 @@ import (
 )
 
 type ServerInfo struct {
+	Id          string
 	IP          string
 	User        string
 	Port        int
-	Group       []string
+	Groups      []string
 	Description string
 }
 
-var servers = make(map[string]ServerInfo)
+var Servers = make(map[string]ServerInfo)
+
+// Function that creates a hash id for groups
+func createID() string {
+	hash := md5.New()
+	hash.Write([]byte(fmt.Sprintf("%d", time.Now().UnixNano())))
+	return fmt.Sprintf("%x", hash.Sum(nil))
+}
 
 // This function checks if the server is reachable via SSH (port 22)
 func getStatus(ip string) bool {
@@ -31,13 +40,15 @@ func getStatus(ip string) bool {
 
 // This function returns if the server exists based on an identifier
 // If exists returns the identifier kind
-func serverExists(identifier string) (bool, string) {
-	for name, server := range servers {
+func ServerExists(identifier string) (bool, string) {
+	for name, server := range Servers {
 		switch {
 		case identifier == name:
 			return true, "name"
 		case identifier == server.IP:
 			return true, "IP"
+		case identifier == server.Id:
+			return true, "ID"
 		}
 	}
 	return false, ""
@@ -58,7 +69,7 @@ func existServersFile(serversFile string) bool {
 
 // Save servers to JSON
 func SaveServers() {
-	data, err := json.MarshalIndent(servers, "", "  ")
+	data, err := json.MarshalIndent(Servers, "", "  ")
 	if err != nil {
 		fmt.Printf("[❌] Failed to convert in JSON: %s\n", err)
 		return
@@ -86,7 +97,7 @@ func LoadServers(serversFile string) {
 		return
 	}
 
-	err = json.Unmarshal(data, &servers)
+	err = json.Unmarshal(data, &Servers)
 	if err != nil {
 		fmt.Printf("[❌] Failed to parse servers JSON: %s\n", err)
 		return
