@@ -1,14 +1,10 @@
 {
-  "sample": {
-    "Id": "604dc2f508a0165d8bfe9a7d34aeaf2b",
+  "localCluster": {
+    "Id": "d189777877bedb5e722bba6c62fa3421",
     "Description": "",
     "Members": [
-      "bee1201b6be17b056b507e338e453f3cea83"
+      "master496d2479f81bda4993c5bfb48dd10209",
+      "workere326fc9ab77cd364f39f6d009eb6eea3"
     ]
-  },
-  "sample2": {
-    "Id": "b6538479487a7a919a21dbac667c91b2",
-    "Description": "",
-    "Members": []
   }
 }

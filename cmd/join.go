@@ -15,7 +15,7 @@ var description string
 // joinCmd represents the join command
 var joinCmd = &cobra.Command{
 	Use:   "join",
-	Short: "Join command. Used to join servers into the database.",
+	Short: "Join command. Used to join servers into the database. Use: hivessh join <name> <ip> [flags]",
 	Args:  cobra.ExactArgs(2),
 	Run: func(cmd *cobra.Command, args []string) {
 

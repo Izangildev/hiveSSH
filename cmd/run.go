@@ -39,6 +39,7 @@ var runCmd = &cobra.Command{
 			fmt.Printf("[➡️] Connecting to server '%s'...\n", target)
 		} else {
 			fmt.Printf("[➡️] Connecting to group '%s'...\n", targetGroup)
+			fmt.Print("------------------------------------------\n")
 		}
 
 		// Execute the command on the specified target
@@ -58,6 +59,6 @@ var runCmd = &cobra.Command{
 
 func init() {
 	runCmd.Flags().StringVar(&target, "to", "", "IP or name of the server stored in DB")
-	runCmd.Flags().StringVar(&targetGroup, "group", "", "Name of the group to run the command on")
+	runCmd.Flags().StringVarP(&targetGroup, "group", "g", "", "Name of the group to run the command on")
 	RootCmd.AddCommand(runCmd)
 }

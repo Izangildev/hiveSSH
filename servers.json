@@ -8,5 +8,25 @@
       "604dc2f508a0165d8bfe9a7d34aeaf2b"
     ],
     "Description": ""
+  },
+  "master": {
+    "Id": "master496d2479f81bda4993c5bfb48dd10209",
+    "IP": "192.168.0.23",
+    "User": "root",
+    "Port": 22,
+    "Groups": [
+      "d189777877bedb5e722bba6c62fa3421"
+    ],
+    "Description": "Master of k8s local cluster"
+  },
+  "worker1": {
+    "Id": "workere326fc9ab77cd364f39f6d009eb6eea3",
+    "IP": "192.168.0.24",
+    "User": "root",
+    "Port": 22,
+    "Groups": [
+      "d189777877bedb5e722bba6c62fa3421"
+    ],
+    "Description": "Worker n1 of k8s local cluster"
   }
 }
