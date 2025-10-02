@@ -4,28 +4,29 @@ import (
 	"crypto/md5"
 	"fmt"
 	"hivessh/env"
+	"hivessh/logic"
 	"time"
 )
 
 func Create(groupName string) error {
-	if !existGroupsFile(env.GroupsFile) {
+	if !logic.ExistGroupsFile(env.GroupsFile) {
 		return fmt.Errorf("groups file does not exist")
 	}
 
-	if _, exists := groups[groupName]; exists {
+	if _, exists := logic.Groups[groupName]; exists {
 		return fmt.Errorf("group '%s' already exists", groupName)
 	}
 
 	var id string = createID()
 
-	var group GroupInfo = GroupInfo{
+	var group logic.GroupInfo = logic.GroupInfo{
 		Id:          id,
 		Description: "",
 		Members:     []string{},
 	}
 
-	groups[groupName] = group
-	SaveGroups()
+	logic.Groups[groupName] = group
+	logic.SaveGroups()
 	return nil
 }
 

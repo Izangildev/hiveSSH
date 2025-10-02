@@ -8,12 +8,13 @@ import (
 )
 
 var target string
+var targetGroup string
 
 // runCmd represents the run command
 var runCmd = &cobra.Command{
 	Use:   "run",
 	Short: "Command run, used to execute a unique remote command.",
-	Long:  ``,
+	Long:  `Run use: hivessh run <command> --to <target> OR hivessh run <command> --group <groupname>`,
 	Args:  cobra.ExactArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
 
@@ -29,23 +30,34 @@ var runCmd = &cobra.Command{
 			return
 		}
 
-		if target == "" {
-			fmt.Println("[❌] You must specify a target server using --to")
+		if target == "" && targetGroup == "" {
+			fmt.Println("[❌] You must specify a target server using --to or a target group using --group")
 			return
 		}
 
-		fmt.Printf("[➡️] Connecting to server '%s'...\n", target)
-
-		if err := logic.Run(command, target); err != nil {
-			fmt.Printf("[❌] Command execution failed: %s\n", err)
-			return
+		if target != "" {
+			fmt.Printf("[➡️] Connecting to server '%s'...\n", target)
+		} else {
+			fmt.Printf("[➡️] Connecting to group '%s'...\n", targetGroup)
 		}
 
-		fmt.Printf("[✅] Command executed successfully on '%s'\n", target)
+		// Execute the command on the specified target
+		if target != "" {
+			if err := logic.Run(command, target); err != nil {
+				fmt.Printf("[❌] Command execution failed: %s\n", err)
+				return
+			}
+		} else {
+			if err := logic.RunGroup(command, targetGroup); err != nil {
+				fmt.Printf("[❌] Command execution failed: %s\n", err)
+				return
+			}
+		}
 	},
 }
 
 func init() {
 	runCmd.Flags().StringVar(&target, "to", "", "IP or name of the server stored in DB")
+	runCmd.Flags().StringVar(&targetGroup, "group", "", "Name of the group to run the command on")
 	RootCmd.AddCommand(runCmd)
 }

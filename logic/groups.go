@@ -1,4 +1,4 @@
-package group
+package logic
 
 import (
 	"encoding/json"
@@ -13,9 +13,9 @@ type GroupInfo struct {
 	Members     []string
 }
 
-var groups = make(map[string]GroupInfo)
+var Groups = make(map[string]GroupInfo)
 
-func existGroupsFile(groupsFile string) bool {
+func ExistGroupsFile(groupsFile string) bool {
 	_, err := os.Stat(groupsFile)
 	if err != nil {
 		if os.IsNotExist(err) {
@@ -29,7 +29,7 @@ func existGroupsFile(groupsFile string) bool {
 }
 
 func SaveGroups() {
-	data, err := json.MarshalIndent(groups, "", "  ")
+	data, err := json.MarshalIndent(Groups, "", "  ")
 	if err != nil {
 		fmt.Printf("[❌] Failed to save groups: %s\n", err)
 		return
@@ -42,7 +42,7 @@ func SaveGroups() {
 }
 
 func LoadGroups(groupsFile string) {
-	if !existGroupsFile(groupsFile) {
+	if !ExistGroupsFile(groupsFile) {
 		return
 	}
 
@@ -56,7 +56,7 @@ func LoadGroups(groupsFile string) {
 		return
 	}
 
-	err = json.Unmarshal(data, &groups)
+	err = json.Unmarshal(data, &Groups)
 	if err != nil {
 		fmt.Printf("[❌] Failed to parse groups JSON: %s\n", err)
 		return
@@ -64,6 +64,6 @@ func LoadGroups(groupsFile string) {
 }
 
 func GroupExists(groupname string) bool {
-	_, exists := groups[groupname]
+	_, exists := Groups[groupname]
 	return exists
 }
