@@ -199,11 +199,13 @@ func runOnMemberOutput(command, identifier string) string {
 	if err := session.Run(command); err != nil {
 		output.WriteString(fmt.Sprintf("\t[❌] Error executing command\n\t[ERROR DETAILS] %s\n", strings.ReplaceAll(stderr.String(), "\n", "\n\t")))
 	} else {
-		output.WriteString(fmt.Sprintf("\t[✅] Command: %s executed successfully\n", command))
 		if stdout.Len() > 0 {
+			output.WriteString(fmt.Sprintf("\t[✅] Command: %s executed successfully\n", command))
 			output.WriteString("\t[✅] Output:\n")
 			output.WriteString(fmt.Sprintf("\t%s\n", strings.ReplaceAll(stdout.String(), "\n", "\n\t")))
+			return output.String()
 		}
+		output.WriteString(fmt.Sprintf("\t[✅] Command: %s executed successfully with no output\n", command))
 	}
 
 	return output.String()
