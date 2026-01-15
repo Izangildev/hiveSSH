@@ -76,14 +76,6 @@ go build -o hivessh
 sudo mv hivessh /usr/local/bin/
 ```
 
-## Notes
-
-The tool uses MD5 hash-based IDs for servers and groups to support renaming without breaking relationships [4](#0-3) . All operations follow a write-through cache pattern, immediately persisting changes to disk [3](#0-2) .
-
-Wiki pages you might want to explore:
-- [Creating Groups (Izangildev/hiveSSH)](/wiki/Izangildev/hiveSSH#5.1)
-- [Architecture (Izangildev/hiveSSH)](/wiki/Izangildev/hiveSSH#6)
-
 ### Citations
 
 **File:** main.go (L10-14)
