@@ -2,7 +2,8 @@ package cmd
 
 import (
 	"fmt"
-	"hivessh/logic"
+	"hivessh/internal/store"
+	"strings"
 
 	"github.com/spf13/cobra"
 )
@@ -12,18 +13,15 @@ var outputType string
 var listCmd = &cobra.Command{
 	Use:   "list",
 	Short: "Display the configured hosts and their status",
-	Long: `The list command shows all hosts registered in HiveSSH 
-along with their IP address and connection status (reachable or unreachable).`,
+	Long:  `Shows all hosts registered in HiveSSH along with their IP address and SSH connection status.`,
 	Run: func(cmd *cobra.Command, args []string) {
-
-		if outputType != "" && outputType != "json" && outputType != "csv" {
+		out := strings.ToLower(outputType)
+		if out != "" && out != "json" && out != "csv" {
 			fmt.Println("[❌] Invalid output type. Supported types are: json, csv")
 			return
 		}
-
-		if err := logic.List(outputType); err != nil {
+		if err := store.List(out); err != nil {
 			fmt.Printf("[❌] Command execution failed: %s\n", err)
-			return
 		}
 	},
 }
