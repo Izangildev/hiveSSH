@@ -1,8 +1,0 @@
-{
-  "permissions": {
-    "allow": [
-      "Bash(cd C:/Users/izang/Desktop/PROYECTOS/hiveSSH && go build ./...)",
-      "Bash(cd C:/Users/izang/Desktop/PROYECTOS/hiveSSH && rm -rf env/ logic/)"
-    ]
-  }
-}
